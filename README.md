@@ -20,6 +20,7 @@ Obox permet également de créer son rapport de pentest directement sur la plate
 * 🔨 **Centralisation :** Tous vos outils offensifs au même endroit.
 * 🚀 **Rapidité :** Déploiement et exécution fluides pour les missions de Red Teaming.
 
+https://www.youtube.com/watch?v=PwIqmru0xzM
 ---
 
 ## 🛠️ Installation
