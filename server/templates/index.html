@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>OBOX – Toolbox Pentest</title>
+
+    <!-- Permet au site d'être responsive sur mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- On importe deux polices depuis Google Fonts -->
+    <!-- Share Tech Mono : police style terminal/hacker -->
+    <!-- Rajdhani : police moderne pour les titres -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- On relie notre fichier CSS pour le style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/obox-logo.png') }}">
+</head>
+
+<body>
+
+    <!-- Canvas pour l'animation Matrix en arrière-plan (géré dans script.js) -->
+    <canvas id="matrix"></canvas>
+
+    <!-- Overlay sombre qui apparaît quand la sidebar est ouverte -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- ===================== SIDEBAR (menu latéral) ===================== -->
+    <nav class="sidebar" id="sidebar">
+
+        <!-- Logo en haut de la sidebar -->
+        <div class="sidebar-logo">
+            <img src="{{ url_for('static', filename='images/obox-logo.png') }}" alt="OBOX Logo" class="header-logo" />
+        </div>
+
+        <!-- Titre de la section outils -->
+        <div class="sidebar-header">
+            <h3>🔐 OUTILS</h3>
+        </div>
+
+        <!-- Liste des outils disponibles -->
+        <!-- Chaque lien ouvre une page dédiée à l'outil dans un nouvel onglet -->
+        <ul class="menu-items">
+
+            <li class="menu-item">
+                <a href="#" data-tool="home">
+                    <span class="icon">🏠</span>
+                    <span>Accueil</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ url_for('nmap_page') }}" data-tool="nmap">
+                    <span class="icon">🔍</span>
+                    <span>Nmap</span>
+                    <!-- Badge qui indique la catégorie de l'outil -->
+                    <span class="badge badge-network">Réseau</span>
+                </a>
+            </li>
+            
+
+            <li class="menu-item">
+                <a href="{{ url_for('hydra_page') }}" data-tool="hydra">
+                    <span class="icon">🔑</span>
+                    <span>Hydra</span>
+                    <span class="badge badge-auth">Auth</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ url_for('sqlmap_page') }}" data-tool="sqlmap">
+                    <span class="icon">💉</span>
+                    <span>SQLMap</span>
+                    <span class="badge badge-web">Web</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ url_for('nikto_page') }}" data-tool="nikto">
+                    <span class="icon">🛡️</span>
+                    <span>Nikto</span>
+                    <span class="badge badge-web">Web</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ url_for('reporting_page') }}" data-tool="reporting">
+                    <span class="icon">📊</span>
+                    <span>Reporting</span>
+                    <span class="badge badge-report">Rapport</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="{{ url_for('about_page') }}" data-tool="about">
+                    <span class="icon">ℹ️</span>
+                    <span>À propos</span>
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+    <!-- ===================== FIN SIDEBAR ===================== -->
+
+
+    <!-- ===================== HEADER (barre du haut) ===================== -->
+    <header class="header">
+
+        <!-- Bouton hamburger (☰) pour ouvrir/fermer la sidebar -->
+        <div class="header-left">
+            <div class="menu-toggle" id="menuToggle">
+                <!-- Les 3 spans forment les 3 traits du bouton hamburger -->
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <!-- Titre principal affiché au centre du header -->
+        <div class="header-center">
+            <h1>⚡ OBOX – TOOLBOX DE PENTEST ⚡</h1>
+            <p>Projet M1 – Cybersécurité 2026</p>
+        </div>
+
+        <!-- Logo et bouton déconnexion à droite du header -->
+        <div class="header-right">
+            <a href="{{ url_for('logout') }}" class="btn-logout">&#x23FB; Déconnexion</a>
+            <img src="{{ url_for('static', filename='images/obox-logo.png') }}" alt="OBOX Logo" class="header-logo" />
+        </div>
+
+    </header>
+    <!-- ===================== FIN HEADER ===================== -->
+
+
+    <!-- ===================== CONTENU PRINCIPAL ===================== -->
+    <div class="main-container" id="mainContainer">
+
+        <!-- Page d'accueil (dashboard) -->
+        <div class="dashboard" id="homePage">
+
+            <!-- Message de bienvenue personnalisé -->
+            <div class="welcome-msg">
+                &gt;_ Bienvenue, <span class="welcome-name">{{ username }}</span> — Bonne session d'audit.
+            </div>
+
+            <!-- Grille de statistiques (4 cartes) -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon">🔐</div>
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Outils Actifs</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Disponibilité</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">Monitoring</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🛡️</div>
+                    <div class="stat-value">SECURE</div>
+                    <div class="stat-label">Status</div>
+                </div>
+
+                
+            </div>
+
+            <!-- Zone de texte animé (effet machine à écrire) -->
+            <!-- Le texte qui défile est défini dans script.js -->
+            <div class="typing-section">
+                <div class="typing-plain">
+                    <span class="typing-text" id="typingText"></span>
+                    <!-- Curseur clignotant -->
+                    <span class="typing-cursor">█</span>
+                </div>
+            </div>
+
+            <!-- ===================== ACCORDION (questions/réponses) ===================== -->
+            <!-- Chaque bloc s'ouvre/se ferme au clic (géré dans script.js) -->
+            <div class="accordion-section">
+
+                <p class="accordion-intro">Votre plateforme de pentest tout-en-un. Découvrez ce que vous pouvez faire.</p>
+
+                <div class="accordion">
+
+                    <!-- Question 1 -->
+                    <div class="accordion-item">
+                        <button class="accordion-btn">
+                            <span>🔍 Qu'est-ce qu'OBOX ?</span>
+                            <span class="accordion-arrow">▼</span>
+                        </button>
+                        <div class="accordion-body">
+                            <p>OBOX est une toolbox de pentest unifiée regroupant les outils les plus utilisés en cybersécurité offensive. Nmap, Hydra, SQLMap… tout est accessible depuis une seule interface, sans jongler entre les terminaux.</p>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="accordion-item">
+                        <button class="accordion-btn">
+                            <span>🎯 À qui s'adresse cet outil ?</span>
+                            <span class="accordion-arrow">▼</span>
+                        </button>
+                        <div class="accordion-body">
+                            <p>OBOX est conçu pour les pentesters, étudiants en cybersécurité et équipes Red Team souhaitant centraliser leurs tests d'intrusion. Il est utilisé dans le cadre de missions autorisées et d'environnements de lab.</p>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="accordion-item">
+                        <button class="accordion-btn">
+                            <span>⚠️ Cadre légal & éthique</span>
+                            <span class="accordion-arrow">▼</span>
+                        </button>
+                        <div class="accordion-body">
+                            <p>L'utilisation de ces outils est <strong>strictement réservée</strong> à des environnements dont vous avez l'autorisation explicite de tester. Tout usage non autorisé est illégal et contraire à l'éthique du pentest responsable.</p>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="accordion-item">
+                        <button class="accordion-btn">
+                            <span>📋 Comment démarrer ?</span>
+                            <span class="accordion-arrow">▼</span>
+                        </button>
+                        <div class="accordion-body">
+                            <p>Ouvrez le menu latéral via le bouton ☰ en haut à gauche, sélectionnez l'outil souhaité, configurez vos paramètres et lancez votre analyse. Les résultats s'affichent directement dans l'interface.</p>
+                        </div>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="accordion-item">
+                        <button class="accordion-btn">
+                            <span>📊 Générer un rapport</span>
+                            <span class="accordion-arrow">▼</span>
+                        </button>
+                        <div class="accordion-body">
+                            <p>Une fois vos tests terminés, rendez-vous dans la section <strong>Reporting</strong> pour compiler l'ensemble de vos résultats en un rapport professionnel exportable, prêt à être remis à votre client ou tuteur.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- ===================== FIN ACCORDION ===================== -->
+
+        </div>
+        <!-- Fin de la page d'accueil -->
+
+    </div>
+    <!-- ===================== FIN CONTENU PRINCIPAL ===================== -->
+
+
+    <!-- Pied de page -->
+    <footer>
+        © 2026 – Projet Mastère Cybersécurité | Tous droits réservés
+    </footer>
+
+    <!-- On charge le JavaScript à la fin pour que la page soit déjà chargée avant d'exécuter le code -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
+
