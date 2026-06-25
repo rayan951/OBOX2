@@ -13,6 +13,7 @@
 ## 🚩 À propos
 
 **Obox** est une plateforme centralisée conçue pour regrouper les outils essentiels aux tests d'intrusion. L'objectif est simple : arrêter de chercher vos scripts partout et accélérer vos audits de sécurité.
+Obox permet également de créer son rapport de pentest directement sur la plateforme
 
 ### ⚡ Fonctionnalités principales
 
@@ -32,6 +33,11 @@ cd Obox
 pip install requierements.txt
 # Lancer l'app
 python3 app.py
+```
 
-TEST
-anis
+##  NOTE  
+
+Le dépot initial d'obox n'est plus accessible, car le compte AnisBarreau à été shadowban à cause de la publication d'un outil trop offensif. 
+L'historique des commits est toujours accessible par Anis et le repo n'a pas été supprimé , il n'est juste plus accessible au public : https://github.com/AnisBarreau/Obox
+
+
